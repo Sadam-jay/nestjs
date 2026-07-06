@@ -1,17 +1,20 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
 import type { User } from './user.service';
+import { RoleGuard } from 'src/guards/role.guard';
 
 @Controller('user')
 export class UserController {
@@ -41,6 +44,17 @@ export class UserController {
     return {
       data: { id, ...UpdateUserDto },
       message: 'User Updated successfully',
+    };
+  }
+
+  @Delete(':id')
+  @UseGuards(RoleGuard)
+  deleteUser(@Param('id') id: string) {
+    return {
+      data: {
+        id,
+        message: 'You have access to this route',
+      },
     };
   }
 }
